@@ -196,18 +196,8 @@ carrera2 = 'Lic. en sistemas'
 hacerTablas('primeraTabla.csv', URL1)
 hacerTablas('segundaTabla.csv', URL2)
 
-# print('\nIngresa el valor de la diferencia entre materias que desea obtener(ingrese el valor que esta entre parentesis de lo que quiera): ')
-# print('Diferencia del segundo plan de estudios con respecto del primero(1)')
-# print('Diferencia del primer plan de estudios con respecto del segundo(2)')
-# valorDeDiferencia = input('Ingrese ahora:')
 
 
-
-#while ( valorDeDiferencia != '1' and valorDeDiferencia != '2' and valorDeDiferencia != '3' and resultado != 'exit   '):
- #   print('Valor erroneo. Por favor intentalo de nuevo.')
-  #  valorDeDiferencia = input()    
-   # if (valorDeDiferencia == 'exit'):
-    #    break
 print('\nComo desea obtener el resultado? Archivo csv, mostrar en linea de comandos, las 2 [1,2,3]:')
 resultado = input()
 while(resultado != '1' and resultado != '2' and resultado != '3' and resultado != 'exit'):
