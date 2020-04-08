@@ -6,7 +6,7 @@ from tkinter import *
 import sqlite3
 import pandas as pd
 
-# Desde esta linea y hasta la linea 68, es una prueba de hacerlo gui
+# Desde esta linea y hasta la linea 68, es una prueba de hacerlo gui.
 
 
 # class Comparador:
@@ -105,7 +105,7 @@ def removerColumnas(nombreTabla,nombreOutput,cols_to_remove):
                     del row[col_index]
                 writer.writerow(row)
 
-def diferencia(primerTabla,segundaTabla):
+def diferencia(primerTabla,segundaTabla, valorDeDiferencia):
     if '.csv' not in primerTabla:
         primerTabla+= '.csv'
     if '.csv' not in segundaTabla:
@@ -114,10 +114,16 @@ def diferencia(primerTabla,segundaTabla):
         fileone = t1.readlines()
         filetwo = t2.readlines()
     with open('diferencias.csv', 'w') as outfile:
-        for line in filetwo:
-            if line not in fileone:
-                outfile.write(line)
-
+        if(valorDeDiferencia == '2' or valorDeDiferencia == '3'):
+            for line in fileone:
+                if line not in filetwo:
+                    outfile.write(line)
+        if (valorDeDiferencia == '1' or valorDeDiferencia == '3'):
+            for line in filetwo:
+                if line not in fileone:
+                    outfile.write(line)
+    if(valorDeDiferencia == 'exit()'):
+        remove('diferencias.csv')
 
 def hacerTablas(tabla,url):
     hacerArchivoCsv(url,tabla)
@@ -149,7 +155,20 @@ def eliminarTablas(nombreDelArchivo):
 hacerTablas('primerTabla.csv', URL1)
 hacerTablas('segundaTabla.csv', URL2)
 
-diferencia('primerTabla.csv','segundaTabla.csv')
+print('\nIngresa el valor de la diferencia entre materias que desea obtener(ingrese el valor que esta entre parentesis de lo que quiera): ')
+print('Diferencia del segundo plan de estudios con respecto del primero(1)')
+print('Diferencia del primer plan de estudios con respecto del segundo(2)')
+print('Diferencia total entre los dos planes de estudio(3)')
+valorDeDiferencia = input('Ingrese ahora:')
+
+
+
+while ( valorDeDiferencia != '1' and valorDeDiferencia != '2' and valorDeDiferencia != '3' ):
+    print('Valor erroneo. Por favor intentalo de nuevo.')
+    valorDeDiferencia = input()    
+    if (valorDeDiferencia == 'exit()'):
+        break
+diferencia('primerTabla.csv','segundaTabla.csv',valorDeDiferencia)
 
 
 
