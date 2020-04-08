@@ -1,80 +1,7 @@
 from os import remove
 from pandas.io.html import read_html
 import csv
-from tkinter import ttk
-from tkinter import *
-import sqlite3
 import pandas as pd
-
-# Desde esta linea y hasta la linea 68, es una prueba de hacerlo gui.
-
-
-# class Comparador:
-
-#     db_name = 'database.db'
-
-
-#     def __init__(self,window):
-#         self.wind = window
-#         self.wind.title('Comparador de planes de estudio')
-        
-
-#         # Creating a Frame Container
-#         frame = LabelFrame(self.wind, text='Ingresa la url de los planes de estudio:')
-#         frame.grid(row = 0, column = 0, columnspan = 3, pady = 20)
-
-#         # URL1 Input
-#         Label(frame, text = 'URL 1: ',).grid(row = 1, column = 0)
-#         self.url1 = Entry(frame)
-#         self.url1.focus()
-#         self.url1.grid(row = 1, column = 1)
-#         self.make_csv
-
-#         # URL2 Input
-#         Label(frame,text = 'URL 2: ').grid(row = 2, column = 0)
-#         self.url2 = Entry(frame)
-#         self.url2.grid(row = 2, column = 1)
-
-#         # Boton llamar a paginas
-#         ttk.Button(frame,text = 'Comparar planes de estudio').grid(row = 3, columnspan = 2, sticky = W + E)
-
-# #         # Table
-#         self.tree = ttk.Treeview(height = 20, columns = 2)
-#         self.tree.grid(row = 4, column = 0, columnspan = 2)
-#         self.tree.heading('#0',text = 'Codigo', anchor = CENTER)
-#         self.tree.heading('#1', text = 'Nombre', anchor = CENTER)
-        
-
-#     def run_query(self, query, parameters = ()):
-#         with sqlite3.connect(self.db_name) as conn:
-#             cursor = conn.cursor()
-#             result = cursor.execute(query, parameters)
-#             conn.commit()
-#         return result
-#     def make_csv(self):
-#         table1 = read_html(self.url1, attrs={"class":"table-bordered"})
-#         file_name_table1 = './tabla_1.csv'
-#         table1[0].to_csv(file_name_table1, sep= '\t')
-#         with open('tabla_1.csv', encoding='utf8',newline='') as tabla_1:
-#             spamreader = csv.reader(csvfile, delimiter=",", quotechar = ",", quoting = csv.QUOTE_MINIMAL)
-#             for row in spamreder:
-#                 print(", ".join(row))
-
-
-
-# if __name__ == '__main__':
-#     window = Tk()
-#     application = Comparador(window)
-#     window.mainloop()
-
-
-
-
-
-
-
-
-
 
 
 def hacerArchivoCsv(urlDeTabla, nombreDelArchivo):
@@ -103,10 +30,10 @@ def removerColumnas(nombreTabla,nombreOutput,cols_to_remove):
 
 def diferencia(primerTabla,segundaTabla,nombreCarrera1,nombreCarrera2,resultado):
 
-    with open(primerTabla, 'r') as t1, open (segundaTabla, 'r') as t2:
+    with open(primerTabla, 'r',encoding="utf8") as t1, open (segundaTabla, 'r',encoding="utf8") as t2:
         fileone = t1.readlines()
         filetwo = t2.readlines()
-    with open('diferencias.csv', 'w') as outfile:
+    with open('diferencias.csv', 'w',encoding="utf8") as outfile:
         if(resultado == '1' or resultado == '3'):
             outfile.write('--------- COINCIDEN -------------\n')
         if(resultado == '2' or resultado =='3'):
@@ -118,8 +45,7 @@ def diferencia(primerTabla,segundaTabla,nombreCarrera1,nombreCarrera2,resultado)
                         print(line)
                     outfile.write(line)
                 else:
-                    print(line + " -- COINCIDE")
-
+                    print(line)
         if(resultado == '1' or resultado == '3'):
             outfile.write('\n--------- NO COINCIDEN (Pertenecen a {0}) -------------\n'.format(carrera1))
         if(resultado == '2' or resultado =='3'):
