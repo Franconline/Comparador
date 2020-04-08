@@ -75,11 +75,7 @@ import pandas as pd
 
 
 
-# print('Inserte la URL de la primer pagina')
 
-URL1 = 'https://www.info.unlp.edu.ar/carreras-gradoarticulo/plan-2015-analista-programador-universitario-nuevo/'
-
-URL2 = 'https://www.info.unlp.edu.ar/carreras-gradoarticulo/2015linuevo/'
 
 def hacerArchivoCsv(urlDeTabla, nombreDelArchivo):
     tabla1 = read_html(urlDeTabla,attrs={"class":"table-bordered"})
@@ -105,35 +101,51 @@ def removerColumnas(nombreTabla,nombreOutput,cols_to_remove):
                     del row[col_index]
                 writer.writerow(row)
 
-def diferencia(primerTabla,segundaTabla, valorDeDiferencia, resultado):
-    if '.csv' not in primerTabla:
-        primerTabla+= '.csv'
-    if '.csv' not in segundaTabla:
-        segundaTabla += '.csv'
+def diferencia(primerTabla,segundaTabla,nombreCarrera1,nombreCarrera2,resultado):
+
     with open(primerTabla, 'r') as t1, open (segundaTabla, 'r') as t2:
         fileone = t1.readlines()
         filetwo = t2.readlines()
     with open('diferencias.csv', 'w') as outfile:
-        if(valorDeDiferencia == '2' or valorDeDiferencia == '3'):
-            for line in fileone:
-                if line not in filetwo:
-                    if(resultado == '1' or resultado == '3'):
-                        if(resultado == '3'):
-                            print(line)
-                        outfile.write(line)
-                    else:
+        if(resultado == '1' or resultado == '3'):
+            outfile.write('--------- COINCIDEN -------------\n')
+        if(resultado == '2' or resultado =='3'):
+            print('--------- COINCIDEN -------------\n')
+        for line in fileone:
+            if line in filetwo:
+                if (resultado == '1' or resultado == '3'):
+                    if(resultado == '3'):
                         print(line)
-        if (valorDeDiferencia == '1' or valorDeDiferencia == '3'):
-            for line in filetwo:
-                if line not in fileone:
-                    if(resultado == '1' or resultado == '3'):
-                        if (resultado == '3'):
-                            print(line)
-                        outfile.write(line)
-                    else:
+                    outfile.write(line)
+                else:
+                    print(line + " -- COINCIDE")
+
+        if(resultado == '1' or resultado == '3'):
+            outfile.write('\n--------- NO COINCIDEN (Pertenecen a {0}) -------------\n'.format(carrera1))
+        if(resultado == '2' or resultado =='3'):
+            print('\n--------- NO COINCIDEN (Pertenecen a {0}) -------------\n'.format(carrera1))   
+
+        for line in fileone:
+            if line not in filetwo:
+                if(resultado == '1' or resultado == '3'):
+                    if (resultado == '3'):
                         print(line)
-    if(valorDeDiferencia == 'exit' or resultado == '2'):
-        eliminarTablas('diferencias.csv')
+                    outfile.write(line)
+
+        if(resultado == '1' or resultado == '3'):
+            outfile.write('\n--------- NO COINCIDEN (Pertenecen a {0}) -------------\n'.format(carrera2))
+        if(resultado == '2' or resultado =='3'):
+            print('\n--------- NO COINCIDEN (Pertenecen a {0}) -------------\n'.format(carrera2))   
+        #Lo de abajo itera las materias que no estan en el primer plan de estudios, ya iterado
+        for line in filetwo:
+            if line not in fileone:
+                if (resultado == '1' or resultado == '3'):
+                    if (resultado == '3'):
+                        print(line)
+                    outfile.write(line)
+                else:
+                    print(line)
+
     eliminarTablas(primerTabla)
     eliminarTablas(segundaTabla)
     
@@ -141,7 +153,7 @@ def diferencia(primerTabla,segundaTabla, valorDeDiferencia, resultado):
 def hacerTablas(tabla,url):
     hacerArchivoCsv(url,tabla)
     removerColumnas(tabla,'output',[1,2,3])
-    remove(tabla)
+    eliminarTablas(tabla)
     removerColumnas('output','segundoOutput',[2])
     remove('output.csv')
     removerColumnas('segundoOutput', 'tercerOutput', [0])
@@ -162,33 +174,48 @@ def hacerTablas(tabla,url):
     remove('tercerOutput.csv')
 
 def eliminarTablas(nombreDelArchivo):
+    if '.csv' not in nombreDelArchivo:
+        nombreDelArchivo += '.csv'
     remove(nombreDelArchivo)
 
+print('Por favor, ingrese el link del primer plan de estudios: ')
 
-hacerTablas('primerTabla.csv', URL1)
+URL1 = 'https://www.info.unlp.edu.ar/carreras-gradoarticulo/2015linuevo/'
+
+print('Ingrese el nombre de la carrera(Ej: Lic. en Informatica):')
+carrera1 = 'Lic. en informatica'
+
+print('Por favor, ingrese el link del segundo plan de estudios: ')
+URL2 = 'https://www.info.unlp.edu.ar/carreras-gradoarticulo/plan-2015-licenciatura-en-sistema/'
+
+print('Ingrese el nombre de la carrera(Ej: Lic. en Informatica):')
+carrera2 = 'Lic. en sistemas'
+
+
+
+hacerTablas('primeraTabla.csv', URL1)
 hacerTablas('segundaTabla.csv', URL2)
 
-print('\nIngresa el valor de la diferencia entre materias que desea obtener(ingrese el valor que esta entre parentesis de lo que quiera): ')
-print('Diferencia del segundo plan de estudios con respecto del primero(1)')
-print('Diferencia del primer plan de estudios con respecto del segundo(2)')
-print('Diferencia total entre los dos planes de estudio(3)')
-valorDeDiferencia = input('Ingrese ahora:')
+# print('\nIngresa el valor de la diferencia entre materias que desea obtener(ingrese el valor que esta entre parentesis de lo que quiera): ')
+# print('Diferencia del segundo plan de estudios con respecto del primero(1)')
+# print('Diferencia del primer plan de estudios con respecto del segundo(2)')
+# valorDeDiferencia = input('Ingrese ahora:')
 
 
 
-while ( valorDeDiferencia != '1' and valorDeDiferencia != '2' and valorDeDiferencia != '3' and resultado != 'exit'):
-    print('Valor erroneo. Por favor intentalo de nuevo.')
-    valorDeDiferencia = input()    
-    if (valorDeDiferencia == 'exit'):
-        break
-print('Como desea obtener el resultado? Archivo csv, mostrar en linea de comandos, las 2 [1,2,3]:')
+#while ( valorDeDiferencia != '1' and valorDeDiferencia != '2' and valorDeDiferencia != '3' and resultado != 'exit   '):
+ #   print('Valor erroneo. Por favor intentalo de nuevo.')
+  #  valorDeDiferencia = input()    
+   # if (valorDeDiferencia == 'exit'):
+    #    break
+print('\nComo desea obtener el resultado? Archivo csv, mostrar en linea de comandos, las 2 [1,2,3]:')
 resultado = input()
 while(resultado != '1' and resultado != '2' and resultado != '3' and resultado != 'exit'):
     print('Valor erroneo. Por favor, vuelva a ingresar:')
     resultado = input()
     if(resultado == 'exit'):
         break
-diferencia('primerTabla.csv','segundaTabla.csv',valorDeDiferencia,resultado)
+diferencia('primeraTabla.csv','segundaTabla.csv',carrera1,carrera2,resultado)
 
 
 
