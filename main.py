@@ -105,7 +105,7 @@ def removerColumnas(nombreTabla,nombreOutput,cols_to_remove):
                     del row[col_index]
                 writer.writerow(row)
 
-def diferencia(primerTabla,segundaTabla, valorDeDiferencia):
+def diferencia(primerTabla,segundaTabla, valorDeDiferencia, resultado):
     if '.csv' not in primerTabla:
         primerTabla+= '.csv'
     if '.csv' not in segundaTabla:
@@ -117,13 +117,26 @@ def diferencia(primerTabla,segundaTabla, valorDeDiferencia):
         if(valorDeDiferencia == '2' or valorDeDiferencia == '3'):
             for line in fileone:
                 if line not in filetwo:
-                    outfile.write(line)
+                    if(resultado == '1' or resultado == '3'):
+                        if(resultado == '3'):
+                            print(line)
+                        outfile.write(line)
+                    else:
+                        print(line)
         if (valorDeDiferencia == '1' or valorDeDiferencia == '3'):
             for line in filetwo:
                 if line not in fileone:
-                    outfile.write(line)
-    if(valorDeDiferencia == 'exit()'):
-        remove('diferencias.csv')
+                    if(resultado == '1' or resultado == '3'):
+                        if (resultado == '3'):
+                            print(line)
+                        outfile.write(line)
+                    else:
+                        print(line)
+    if(valorDeDiferencia == 'exit' or resultado == '2'):
+        eliminarTablas('diferencias.csv')
+    eliminarTablas(primerTabla)
+    eliminarTablas(segundaTabla)
+    
 
 def hacerTablas(tabla,url):
     hacerArchivoCsv(url,tabla)
@@ -163,12 +176,19 @@ valorDeDiferencia = input('Ingrese ahora:')
 
 
 
-while ( valorDeDiferencia != '1' and valorDeDiferencia != '2' and valorDeDiferencia != '3' ):
+while ( valorDeDiferencia != '1' and valorDeDiferencia != '2' and valorDeDiferencia != '3' and resultado != 'exit'):
     print('Valor erroneo. Por favor intentalo de nuevo.')
     valorDeDiferencia = input()    
-    if (valorDeDiferencia == 'exit()'):
+    if (valorDeDiferencia == 'exit'):
         break
-diferencia('primerTabla.csv','segundaTabla.csv',valorDeDiferencia)
+print('Como desea obtener el resultado? Archivo csv, mostrar en linea de comandos, las 2 [1,2,3]:')
+resultado = input()
+while(resultado != '1' and resultado != '2' and resultado != '3' and resultado != 'exit'):
+    print('Valor erroneo. Por favor, vuelva a ingresar:')
+    resultado = input()
+    if(resultado == 'exit'):
+        break
+diferencia('primerTabla.csv','segundaTabla.csv',valorDeDiferencia,resultado)
 
 
 
