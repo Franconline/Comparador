@@ -2,9 +2,19 @@ from os import remove
 from pandas.io.html import read_html
 import csv
 import pandas as pd
+import bs4
+from urllib.request import urlopen
 
+
+def nombreDeLaCarrera(url):
+    htmlf = urlopen(url)
+    subhtml = htmlf.read()
+    soup = bs4.BeautifulSoup(subhtml,features="lxml")
+    nombre = soup.find('h5',attrs={'class':'titulo-pag'}).get_text()    
+    return nombre
 
 def hacerArchivoCsv(urlDeTabla, nombreDelArchivo):
+    #Read_html lee  el link en el primer parametro y busca atributos en el segundo.
     tabla1 = read_html(urlDeTabla,attrs={"class":"table-bordered"})
     if '.csv' not in nombreDelArchivo:
         nombreDelArchivo = nombreDelArchivo + ".csv"
@@ -33,7 +43,7 @@ def diferencia(primerTabla,segundaTabla,nombreCarrera1,nombreCarrera2,resultado)
     with open(primerTabla, 'r',encoding="utf8") as t1, open (segundaTabla, 'r',encoding="utf8") as t2:
         fileone = t1.readlines()
         filetwo = t2.readlines()
-    with open('diferencias.csv', 'w',encoding="utf8") as outfile:
+    with open('diferencias.csv', 'w',encoding="utf8",) as outfile:
         if(resultado == '1' or resultado == '3'):
             outfile.write('--------- COINCIDEN -------------\n')
         if(resultado == '2' or resultado =='3'):
@@ -109,19 +119,20 @@ print('Por favor, ingrese el link del primer plan de estudios: ')
 URL1 = 'https://www.info.unlp.edu.ar/carreras-gradoarticulo/2015linuevo/'
 
 print('Ingrese el nombre de la carrera(Ej: Lic. en Informatica):')
-carrera1 = 'Lic. en informatica'
+
 
 print('Por favor, ingrese el link del segundo plan de estudios: ')
-URL2 = 'https://www.info.unlp.edu.ar/carreras-gradoarticulo/plan-2015-licenciatura-en-sistema/'
+URL2 = 'https://www.info.unlp.edu.ar/plan-2012/'
 
 print('Ingrese el nombre de la carrera(Ej: Lic. en Informatica):')
-carrera2 = 'Lic. en sistemas'
 
 
 
 hacerTablas('primeraTabla.csv', URL1)
 hacerTablas('segundaTabla.csv', URL2)
 
+carrera1 = nombreDeLaCarrera(URL1)
+carrera2 = nombreDeLaCarrera(URL2)
 
 
 print('\nComo desea obtener el resultado? Archivo csv, mostrar en linea de comandos, las 2 [1,2,3]:')
@@ -131,7 +142,10 @@ while(resultado != '1' and resultado != '2' and resultado != '3' and resultado !
     resultado = input()
     if(resultado == 'exit'):
         break
-diferencia('primeraTabla.csv','segundaTabla.csv',carrera1,carrera2,resultado)
+
+if(resultado != 'exit'):
+    diferencia('primeraTabla.csv','segundaTabla.csv',carrera1,carrera2,resultado)
+
 
 
 
