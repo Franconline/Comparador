@@ -73,6 +73,7 @@ def diferencia(primerTabla,segundaTabla,nombreCarrera1,nombreCarrera2,resultado)
         if(resultado == '2' or resultado =='3'):
             print('\n--------- NO COINCIDEN (Pertenecen a {0}) -------------\n'.format(carrera2))   
         #Lo de abajo itera las materias que no estan en el primer plan de estudios, ya iterado
+        
         for line in filetwo:
             if line not in fileone:
                 if (resultado == '1' or resultado == '3'):
@@ -100,6 +101,8 @@ def hacerTablas(tabla,url):
     with open(tabla,'w', newline= "") as tabla:
         writer = csv.writer(tabla)
         for line in fileone:
+            if 'Nombre' in line:
+                continue
             if (line.find(" (") != -1):
                 line = line.split(" (")
                 line = line[0] + '\n'
@@ -108,11 +111,18 @@ def hacerTablas(tabla,url):
                 line = line[1] + '\n'     
             tabla.write(line)
     remove('tercerOutput.csv')
-
 def eliminarTablas(nombreDelArchivo):
     if '.csv' not in nombreDelArchivo:
         nombreDelArchivo += '.csv'
     remove(nombreDelArchivo)
+def parsearATexto(tabla):
+    with open('diferencias.csv', 'r',encoding="utf8") as tabla:
+        fileone = tabla.readlines()
+    with open('diferenciasTexto.txt','w',encoding="utf8") as texto:
+        for line in fileone:
+            if 'Nombre' or '1' in line:
+                continue
+            texto.write(line)
 
 print('Por favor, ingrese el link del primer plan de estudios: ')
 
@@ -145,6 +155,8 @@ while(resultado != '1' and resultado != '2' and resultado != '3' and resultado !
 
 if(resultado != 'exit'):
     diferencia('primeraTabla.csv','segundaTabla.csv',carrera1,carrera2,resultado)
+    parsearATexto('diferencias.csv')
+
 
 
 
