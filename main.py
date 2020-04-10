@@ -102,7 +102,7 @@ def hacerTablas(tabla,url):
         writer = csv.writer(tabla)
         for line in fileone:
             if '1' in line:
-                if '511' in line:
+                if line == 1:
                     print(line)
             if 'Nombre' in line:
                 continue
@@ -131,13 +131,8 @@ print('Por favor, ingrese el link del primer plan de estudios: ')
 
 URL1 = 'https://www.info.unlp.edu.ar/carreras-gradoarticulo/2015linuevo/'
 
-print('Ingrese el nombre de la carrera(Ej: Lic. en Informatica):')
-
-
 print('Por favor, ingrese el link del segundo plan de estudios: ')
-URL2 = 'https://www.info.unlp.edu.ar/plan-2012/'
-
-print('Ingrese el nombre de la carrera(Ej: Lic. en Informatica):')
+URL2 = 'https://www.info.unlp.edu.ar/carreras-gradoarticulo/plan-2015-licenciatura-en-sistema/'
 
 
 
