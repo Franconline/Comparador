@@ -101,6 +101,9 @@ def hacerTablas(tabla,url):
     with open(tabla,'w', newline= "") as tabla:
         writer = csv.writer(tabla)
         for line in fileone:
+            if '1' in line:
+                if '511' in line:
+                    print(line)
             if 'Nombre' in line:
                 continue
             if (line.find(" (") != -1):
@@ -156,6 +159,9 @@ while(resultado != '1' and resultado != '2' and resultado != '3' and resultado !
 if(resultado != 'exit'):
     diferencia('primeraTabla.csv','segundaTabla.csv',carrera1,carrera2,resultado)
     parsearATexto('diferencias.csv')
+else:
+    eliminarTablas('primeraTabla.csv')
+    eliminarTablas('segundaTabla.csv')
 
 
 
